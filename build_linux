@@ -1,0 +1,58 @@
+#!/bin/bash 
+
+PKG_NAME="merge_files"
+PKG_NAMESPACE="utils"
+PKG_VERSION="0.2.0"
+
+BUILD="dist"
+PRE_ENV="CGO_ENABLED=0 GOOS=linux GOARCH=amd64"
+ldflags="-s -w -X 'main.Version=${PKG_VERSION}' -X 'main.Name=${PKG_NAME}' -X 'main.Namespace=${PKG_NAMESPACE}'"
+
+function Logger {
+    local _go=$1
+    local _pkg=$2
+    local _msg=$3
+    local _date=$(date "+%Y.%m.%d %H:%M:%S")
+
+    echo "${_date} go(${_go})(${_pkg}): ${_msg}"
+}
+
+# Creating a build folder
+function CreateDir() {
+    local _p=$1
+
+    if [[ -n ${_p} ]] 
+    then
+        Logger "mkdir" "${_p}" "Creating the build folder"
+
+        local ERR=$(mkdir -p ${_p} 2>&1)
+
+        if [[ -n ${ERR} ]] 
+        then
+            Logger "mkdir" "${_p}" "${ERR}"
+
+            exit 1
+        fi
+
+        Logger "mkdir" "${_p}" "Success"
+
+    else
+        Logger "mkdir" "error" "Variable #1 is not passed"
+
+        exit 1
+    fi
+
+    return
+}
+
+CreateDir ${BUILD}
+
+# build
+Logger "exec" "build" "Building executable"
+ERR=$(export ${PRE_ENV} && go build -buildvcs=false -ldflags="${ldflags}" -o ${BUILD}/${PKG_NAME} . 2>&1)
+if [[ -n ${ERR} ]]
+then
+    Logger "exec" "error" "${ERR}"
+    exit 1
+fi
+Logger "exec" "build" "Success"
