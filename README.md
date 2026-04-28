@@ -110,7 +110,6 @@ The tool:
 - Packs them into a single binary file
 - Unpacking files by passing meta data
 - Generates metadata (file offset + size)
-- Allows you to extract individual files later (your code is used for extraction, there is a ready-made meta file).
 
 ---
 
