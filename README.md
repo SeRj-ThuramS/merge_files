@@ -115,6 +115,8 @@ The tool:
 
 ## ⚡ Roadmap
 
-- [x] `unpack` command
+- [x] unpacking files
+- [ ] recursive addition of folders and files
 - [ ] gzip compression support
 - [ ] SHA256 integrity check
+      
